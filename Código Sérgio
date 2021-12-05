@@ -1,0 +1,156 @@
+#include<stdlib.h>
+#include<stdio.h>
+#include<string.h>
+#include<locale.h>
+
+struct plataforma{
+	char codigo[10];
+	int tp;
+	char tipo[12];
+	int ano,cp;
+	char campo[10];
+	int hc,qtd_Horas,qtd_Horas_Paradas;
+	float  prod,coeficiente;
+};
+
+//Váriáveis globais
+float resp_Q2;
+//Declara a variável resp_q3 que é do tipo plataforma
+plataforma resp_q3;
+
+//Função que usa vetor que preenche os dados da tabela
+//Parâmetros da função(n=tamanho do vetor, chama a variável plataformas do tipo plataforma para acessar as variáveis que compõe a struct)
+void preenche(int n, plataforma *plataformas){
+	
+	//Para contagem do vetor
+	int i;
+	
+	//Ciclo for para preencher os campos da tabela através de vetor
+	for(i=0;i<n;i++){
+		plataformas[i].tp=(rand()%3)+1;
+		plataformas[i].ano=(rand()%20)+2000;
+		plataformas[i].cp=(rand()%3)+1;
+		plataformas[i].hc=rand()%2;
+		plataformas[i].qtd_Horas_Paradas=rand()%3601;
+		plataformas[i].prod=(rand()%1501)+1000;
+		
+		//Lógica para transformar valor de int para char (TIPO DA PLATAFORMA)
+		if(plataformas[i].tp==1){
+			//Função sprint para formatar a variável para string
+			sprintf(plataformas[i].tipo,"Fixa       ");
+			sprintf(plataformas[i].codigo,"%dFX%.2d",i+101,plataformas[i].ano-2000);
+		}
+		if(plataformas[i].tp==2){
+			sprintf(plataformas[i].tipo,"Navio Sonda");
+			sprintf(plataformas[i].codigo,"%dNS%.2d",i+101,plataformas[i].ano-2000);
+		}
+		if(plataformas[i].tp==3){
+			sprintf(plataformas[i].tipo,"Semi Submer");
+			sprintf(plataformas[i].codigo,"%dSS%.2d",i+101,plataformas[i].ano-2000);
+		}
+		
+		if(plataformas[i].cp==1){
+			sprintf(plataformas[i].campo,"Marlim  ");
+		}
+		if(plataformas[i].cp==2){
+			sprintf(plataformas[i].campo,"Albacora");
+		}
+		if(plataformas[i].cp==3){
+			sprintf(plataformas[i].campo,"Roncador");
+		}
+		if(plataformas[i].hc==0)plataformas[i].qtd_Horas=8760;
+		if(plataformas[i].hc==1)plataformas[i].qtd_Horas=17520;
+		
+		//Cálculo do coeficiente
+		plataformas[i].coeficiente=(plataformas[i].prod/(plataformas[i].qtd_Horas-plataformas[i].qtd_Horas_Paradas))*1000;
+	}
+	
+}
+
+//Função que contará a média de horas paradas das plataformas tipo semi submersível
+//Parâmetros da função(n=tamanho do vetor, chama a variável plataformas do tipo plataforma para acessar as variáveis que compõe a struct)
+void questao_2(int n,plataforma *plataformas){
+	int i;
+	float tot_HP_SS=0,tot_SS=0 ;
+	
+	for(i=0;i<n;i++){
+		if(plataformas[i].tp==3){
+			tot_HP_SS+=plataformas[i].qtd_Horas_Paradas;
+			tot_SS++;
+		}				
+	}
+	//O resultado da função é armazenado na variável global resp_Q2, que pode ser acessada na main
+	//resp_Q2 declarada na linha 17
+	resp_Q2=tot_HP_SS/tot_SS;
+}
+
+//Função que calcula plataforma com maior coeficiente e imprimir todos os seus dados
+//Parâmetros da função(n=tamanho do vetor, chama a variável plataformas do tipo plataforma para acessar as variáveis que compõe a struct)
+void questao_3(int n,plataforma *plataformas){
+	int i;
+	
+	float maior_coef=0;
+	
+	for(i=0;i<n;i++){
+		if(plataformas[i].coeficiente>maior_coef){
+			maior_coef=plataformas[i].coeficiente;
+			//resp_q3 é do tipo plataforma, declarada na linha 19, porque precisa imprimir todas as informações da plataforma
+			resp_q3=plataformas[i];
+		}				
+	}	
+}
+
+//Função que calcula o percentual de plataformas dos Campos de Roncador e Marlim com hora paradas menor que 800
+//Parâmetros da função(n=tamanho do vetor, chama a variável plataformas do tipo plataforma para acessar as variáveis que compõe a struct)
+float questao_4(int n,plataforma *plataformas){
+	int i;
+	
+	float perc_Ronc, tot_Ronc=0,tot_Ronc_M8;
+	for(i=0;i<n;i++){
+		if(plataformas[i].cp==3){
+			//Cont do total de Roncador
+			tot_Ronc++;
+			if(plataformas[i].qtd_Horas_Paradas<800){
+				//Cont do total de Roncador com HP>800
+				tot_Ronc_M8++;
+			}
+		}
+	}
+	//Cálculo da porcentagem
+	perc_Ronc=(	tot_Ronc_M8/tot_Ronc)*100;
+	//Return para a main
+	return(perc_Ronc);
+	
+	//Campo de Marlim???
+}
+
+//Função que vai imprimir valores da tabela
+//Parâmetros da função(n=tamanho do vetor, chama a variável plataformas do tipo plataforma para acessar as variáveis que compõe a struct)
+void apresenta(int n,plataforma *plataformas,float r4){
+	int i;
+	for(i=0;i<n;i++){
+		printf("%s\t%s\t%d\t%s\t%d\t%d\t%.0f\t%.1f\n",plataformas[i].codigo,plataformas[i].tipo,plataformas[i].ano,plataformas[i].campo,plataformas[i].qtd_Horas,plataformas[i].qtd_Horas_Paradas,plataformas[i].prod,plataformas[i].coeficiente);
+	}
+	printf("======================================================================\n");
+	printf("A média de Horas paradas das Plataformas do tipo Semi Submersíve:%.1f\n",resp_Q2);
+	printf("=================================================\n");
+	printf("Plataforma de Maior coeficiente\n");
+	//	printf("%s\t%s\t%d\t%s\t%d\t%d\t%.0f\t%.1f\n",plataformas[resp_q3].codigo,plataformas[resp_q3].tipo,plataformas[resp_q3].ano,plataformas[resp_q3].campo,plataformas[resp_q3].qtd_Horas,plataformas[resp_q3].qtd_Horas_Paradas,plataformas[resp_q3].prod,plataformas[resp_q3].coeficiente);
+	
+	//resp_q3 é do tipo plataforma, imprime todas as informações da plataforma selecionada
+	printf("%s\t%s\t%d\t%s\t%d\t%d\t%.0f\t%.1f\n",resp_q3.codigo,resp_q3.tipo,resp_q3.ano,resp_q3.campo,resp_q3.qtd_Horas,resp_q3.qtd_Horas_Paradas,resp_q3.prod,resp_q3.coeficiente);
+	printf("Resposta questao 4 %.1f\n",r4);
+}
+
+main(){
+	setlocale (LC_ALL, "portuguese");
+	float resp_q4;
+	plataforma plataformas[12];
+	preenche(12, plataformas);
+	questao_2(12, plataformas);
+	questao_3(12, plataformas);
+	resp_q4=questao_4(12, plataformas);
+//	q6(180,empresa);
+	apresenta(12, plataformas,resp_q4);
+	
+}
