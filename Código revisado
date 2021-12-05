@@ -1,0 +1,271 @@
+/*Nome: Gabrielle Lattanzi
+Professor:Sergio Netto
+N1 - Prog II
+*/
+
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <string.h>
+
+struct plataforma{
+	int cod, t, anof, dez, c, hc, horac, hp, prod, ss, hp_ss; 
+	float mhp_ss, tronc, thpronc, tmarl, thpmarl, pronc, pmarl, mpm, mpr, mpa, coef;
+	char tipo[50], tp[5], campo[50];
+};
+
+void codigo(plataforma*p, int n)
+{
+	int i=0;
+	//Consertar sequencial
+	for(int i=0; i<n; i++)
+	{
+		p[i].cod = 101;
+	}
+	
+}
+
+void tipo(plataforma*p, int n)
+{
+	for(int i=0; i<n; i++)
+	{
+		if (p[i].t == 1)
+		{
+			sprintf(p[i].tipo,"Fixa\t\t");
+			sprintf(p[i].tp,"FX");
+		}
+		else if (p[i].t == 2)
+		{
+			sprintf(p[i].tipo,"Navio Sonda\t");
+			sprintf(p[i].tp,"NS");
+		}
+		else
+		{
+			sprintf(p[i].tipo,"Semi Submersível");
+			sprintf(p[i].tp,"SS");	
+		}
+	
+	}
+	
+}
+
+void ano(plataforma*p, int n)
+{
+	for(int i=0; i<n; i++)
+	{
+		p[i].anof = 2000 + (rand() % 20);
+	
+	if (p[i].anof<2010)
+	{
+		p[i].dez = 00;
+	}
+	else if (p[i].anof>=2010)
+	{
+		p[i].dez = 10;
+	}
+	
+	}
+	
+}
+
+void campo(plataforma*p, int n)
+{
+	for(int i=0; i<n; i++)
+	{
+		p[i].c = 1 + (rand() % 3);
+	
+	if (p[i].c == 1)
+	{
+		strcpy(p[i].campo,"Marlim\t");
+	}
+	else if (p[i].c == 2)
+	{
+		strcpy(p[i].campo,"Albacora");
+	}
+	else
+	{
+		strcpy(p[i].campo,"Roncador");
+	}
+	
+	}
+	
+}
+
+void horas_contratadas(plataforma*p, int n)
+{
+	for(int i=0; i<n; i++)
+	{
+		p[i].hc = rand() % 2;
+	
+	if (p[i].hc == 1)
+	{
+		p[i].horac = 8760;
+	}
+	else
+	{
+		p[i].horac = 17520;
+	}
+	
+	}
+	
+}
+
+void horas_paradas(plataforma*p, int n)
+{
+	for(int i=0; i<n; i++)
+	{
+		p[i].hp = rand() % 3601;	
+	}
+	
+}
+
+void producao(plataforma*p, int n)
+{
+	for(int i=0; i<n; i++)
+	{
+		p[i].prod = 1000 + (rand() % 1501);
+	}
+	
+}
+
+//VERIFICAR
+void coeficiente(plataforma*p, int n)
+{
+	for(int i=0; i<n; i++)
+	{
+		p[i].coef = (p[i].prod/(p[i].horac-p[i].hp))*1000;
+	}
+}
+
+void imprimir(plataforma*p, int n)
+{
+	for(int i=0; i<n; i++)
+	{
+		printf("%d%s%d\t%s %d\t%s\t%d\t%d\t%d\t%f\n", p[i].cod, p[i].tp, p[i].dez, p[i].tipo, p[i].anof, p[i].campo, p[i].horac, p[i].hp, p[i].prod, p[i].c);
+	}
+}
+
+//ERRO
+//Questão 2
+void hp_ss(plataforma*p, int n)
+{
+	int i, thp;
+	
+	for(int i=0; i<n; i++)
+	{
+		if (p[i].t == 3)
+		{
+			p[i].hp_ss += p[i].hp;
+			p[i].ss++;
+		}
+	}
+	
+	p[i].mhp_ss = p[i].hp_ss / p[i].ss;
+}
+
+void maior_coef(plataforma*p, int n)
+{
+	
+}
+
+//ERRO
+void questao4(plataforma*p, int n)
+{
+	float pronc, pmarl;
+	
+	for(int i=0; i<n; i++)
+	{
+		if (p[i].c == 3)
+		{
+			p[i].tronc++;
+			
+			if(p[i].hp<800)
+			{
+				p[i].thpronc++;
+			}
+		}
+		
+		p[i].pronc = (p[i].thpronc++ / p[i].tronc++)*100;
+		
+		if (p[i].c == 1)
+		{
+			p[i].tmarl++;
+			
+			if(p[i].hp<800)
+			{
+				p[i].thpmarl++;
+			}
+		}
+		
+		p[i].pmarl = (p[i].thpmarl++ / p[i].tmarl++)*100;
+	
+	}
+	
+}
+
+void questao5(plataforma*p, int n)
+{
+	int i, tprod, pmarlim, palbacora, proncador;
+	
+	for(i=0; i<n; i++)
+	{
+		tprod = p[i].prod ++;
+		
+			if (p[i].c == 1)
+		{
+			pmarlim += p[i].prod;
+		}
+		else if (p[i].c == 2)
+		{
+			palbacora += p[i].prod;
+		}
+		else
+		{
+			proncador += p[i].prod;
+		}
+	}
+	
+	p[i].mpm = (pmarlim/tprod)*100;
+	p[i].mpa = (palbacora/tprod)*100;
+	p[i].mpr = (proncador/tprod)*100;
+	
+}
+
+main ()
+{
+	setlocale(LC_ALL,"portuguese");
+	srand(time(NULL));
+	
+	printf("Código\tTipo\t\tAno\tCampo\t\tHC\tHP\tProd\tCoeficiente\n");
+	
+	plataforma p[12];
+	
+	int i;
+	
+	codigo(p, 12);
+	tipo(p, 12);
+	ano(p, 12);
+	campo(p, 12);
+	horas_contratadas(p, 12);
+	horas_paradas(p, 12);
+	producao(p, 12);
+	coeficiente(p, 12);
+	imprimir(p, 12);
+	hp_ss(p, 12);
+	questao4(p, 12);
+	
+	printf("\nMédia de horas paradas Semi Submersível: %d\n", p[i].mhp_ss);
+	
+	printf("\nPercentual Roncador: %.2f %%", p[i].pronc);
+	printf("\nPercentual Marlin: %.2f %%\n", p[i].pmarl);
+	
+	printf("\nPercentual de produção Marlim: %.2f %%", p[i].mpm);
+	printf("\nPercentual de produção Albacora: %.2f %%", p[i].mpa);
+	printf("\nPercentual de produção Ronzador: %.2f %%", p[i].mpr);
+	
+}
+
+//
+
+
